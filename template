@@ -1,10 +1,7 @@
-# Template for 64gram for Void Linux distribution.
-# Many thanks to https://aur.archlinux.org/packages/64gram-desktop-bin for some aspects of this template.
 pkgname=64gram-desktop-bin
 version=1.1.52
 revision=1
 build_style=meta
-hostmakedepends="desktop-file-utils glib hicolor-icon-theme libdbus-c++ libX11 libglvnd fontconfig"
 short_desc="Unofficial desktop version of Telegram messaging app. Binary version"
 maintainer="kveld9 <kveld9@disroot.org>"
 license="GPL-3.0"
@@ -16,14 +13,17 @@ nopie=yes
 do_install() {
     cd ${wrksrc}
     install -Dm755 Telegram ${DESTDIR}/usr/bin/64gram-desktop
-    vmkdir usr/share/pixmaps
-    vmkdir usr/share/applications
+
+    for dir in usr/share/pixmaps usr/share/applications usr/share/64Gram/externalupdater.d; do
+        vmkdir ${dir}
+    done
+
     for size in 16 32 48 64 128 256 512; do
         vmkdir usr/share/icons/hicolor/${size}x${size}/apps
         vcopy ${FILESDIR}/icon${size}.png usr/share/icons/hicolor/${size}x${size}/apps/64gram.png
     done
+
     vcopy ${FILESDIR}/icon256.png usr/share/pixmaps/64gram.png
     vcopy ${FILESDIR}/io.github.tdesktop_x64.TDesktop.desktop usr/share/applications/io.github.tdesktop_x64.TDesktop.desktop
-    vmkdir usr/share/64Gram/externalupdater.d
     echo "/usr/bin/64gram-desktop" > ${DESTDIR}/usr/share/64Gram/externalupdater.d/telegram-desktop.conf
 }
